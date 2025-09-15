@@ -11,8 +11,7 @@ const RULES = [
 ];
 
 export default function Recipes(){
-  const [items,setItems] = useState([]);
-
+  const [items,setItems]=useState([]);
   useEffect(()=>{ setItems(loadItems()); },[]);
 
   const urgencyByIng = useMemo(()=>{
@@ -22,7 +21,7 @@ export default function Recipes(){
       if (!it.expiry_date) continue;
       const d = new Date(it.expiry_date).setHours(0,0,0,0);
       const left = Math.floor((d - today)/86400000);
-      for(const ing of it.ingredients || []) {
+      for(const ing of it.ingredients||[]){
         m.set(ing, Math.min(left, m.get(ing) ?? left));
       }
     }
@@ -30,7 +29,7 @@ export default function Recipes(){
   },[items]);
 
   const haveSet = useMemo(()=>{
-    const s = new Set(); for(const it of items) for(const ing of it.ingredients || []) s.add(ing); return s;
+    const s = new Set(); for(const it of items) for(const ing of it.ingredients||[]) s.add(ing); return s;
   },[items]);
 
   const suggestions = useMemo(()=>{
@@ -51,15 +50,15 @@ export default function Recipes(){
   },[haveSet, urgencyByIng]);
 
   return (
-    <main style={{padding:24, fontFamily:'sans-serif'}}>
+    <main style={{padding:24,fontFamily:'sans-serif'}}>
       <h1>レシピ提案（期限が近い順）</h1>
-      <div style={{display:'grid', gap:12, gridTemplateColumns:'repeat(auto-fill,minmax(260px,1fr))'}}>
+      <div style={{display:'grid',gap:12,gridTemplateColumns:'repeat(auto-fill,minmax(260px,1fr))'}}>
         {suggestions.length ? suggestions.map((r,i)=>(
           <div key={i} style={{background:'#f7f7f7',borderRadius:14,padding:14}}>
-            <div style={{fontSize:12, color:'#666'}}>必要: {r.need.join(', ')}</div>
-            <div style={{fontWeight:800, fontSize:18, marginTop:6}}>{r.name}</div>
+            <div style={{fontSize:12,color:'#666'}}>必要: {r.need.join(', ')}</div>
+            <div style={{fontWeight:800,fontSize:18,marginTop:6}}>{r.name}</div>
             <div style={{marginTop:6}}>{r.how}</div>
-            <div style={{fontSize:12, color:'#666', marginTop:6}}>緊急度: 最短 {r.soonest} 日</div>
+            <div style={{fontSize:12,color:'#666',marginTop:6}}>緊急度: 最短 {r.soonest} 日</div>
           </div>
         )) : <small>該当なし。/upload で食材を追加してください。</small>}
       </div>
